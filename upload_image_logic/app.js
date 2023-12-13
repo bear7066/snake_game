@@ -1,7 +1,7 @@
 var express = require('express');
 var body_parser = require('body-parser');
 var mongoose = require('mongoose');
-var img_logic = require('./module.js');
+var img_save = require('./module.js');
 var fs = require('fs');
 var path = require('path');
 const bodyParser = require('body-parser');
@@ -17,26 +17,61 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 var multer = require('multer');
-
-const upload = multer({
-    // 1MB
-    limits:{ fileSize:1000000 },
-    fileFilter(req, file, cb){
-        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
-            cb(new Error('Please upload the correct images file'))
-        }
-        // call_back function
-        cb(null, true)
+//
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'upload')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
     }
 });
-
+ 
+var upload = multer({ storage: storage });
+ 
 app.get('/', (req, res) => {
-    img_logic.find({})
-    .then((data, err) => {
+    img_save.find({})
+    .then((data, err)=>{
         if(err){
             console.log(err);
         }
-        res.render('image.ejs', {items: data});
+        res.render('web_html.ejs',{items: data})
+    })
+});
+// const upload = multer({
+//     // 1MB
+//     limits:{ fileSize:5000000 },
+//     filename: (req, file, cb) => {
+//         cb(null, file.fieldname + '-' + Date.now())
+//     },
+//     fileFilter(req, file, cb){
+//         if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+//             cb(new Error('Please upload the correct images file'))
+//         }
+//         // call_back function
+//         cb(null, 'upload')
+//     }
+// });
+// var imaaa = multer({ storage: upload });
+
+app.post('/', upload.single('image'), (req, res, next) => {
+    var obj = {
+        name: req.body.name,
+        desc: req.body.desc,
+        img:{
+            data: fs.readFileSync(path.join('/upload/' + req.file.filename)),
+            contentType: 'image/png'
+        }
+    };
+    img_save.create(obj)
+    .then((err, item) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            // save images
+            res.redirect('/');
+        }
     });
 });
 
