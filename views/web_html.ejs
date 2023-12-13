@@ -1,69 +1,71 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Image Uploading</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Uploading</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
-	<h1>To Upload Image on mongoDB</h1>
-	<hr />
-	<div>
-	<form action="/" method="POST" enctype="multipart/form-data">
-		<div>
-		<label for="name">Image Title</label>
-		<input
-			type="text"
-			id="name"
-			placeholder="Name"
-			value=""
-			name="name"
-			required
-		/>
-		</div>
-		<div>
-		<label for="desc">Image Description</label>
-		<textarea
-			id="desc"
-			name="desc"
-			value=""
-			rows="2"
-			placeholder="Description"
-			required
-		>
-		</textarea>
-		</div>
-		<div>
-		<label for="image">Upload Image</label>
-		<input type="file" id="image" name="image" value="" required />
-		</div>
-		<div>
-		<button type="submit">Submit</button>
-		</div>
-	</form>
-	</div>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-4">Upload your image from local and get the permanent link!</h1>
+        <hr class="mb-6"/>
 
-	<hr />
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <form action="/" method="POST" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Image Title</label>
+                    <input
+                        type="text"
+                        id="name"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        placeholder="Name"
+                        name="name"
+                        required
+                    />
+                </div>
+                <div class="mb-4">
+                    <label for="desc" class="block text-gray-700 text-sm font-bold mb-2">Image Description</label>
+                    <textarea
+                        id="desc"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        name="desc"
+                        rows="2"
+                        placeholder="Description"
+                        required
+                    ></textarea>
+                </div>
+                <div class="mb-6">
+                    <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Upload Image</label>
+                    <input type="file" id="image" name="image" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100" required />
+                </div>
+                <div>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+                </div>
+            </form>
+        </div>
 
-	<h1>Uploaded Images</h1>
-	<div>
-	<% items.forEach(function(image) { %>
-	<div>
-		<div>
-		<img
-			src="data:image/<%=image.img.contentType%>;base64,
-					<%=image.img.data.toString('base64')%>"
-		/>
-		<div>
-			<h5><%= image.name %></h5>
+        <hr class="my-6"/>
 
-			<p><%= image.desc %></p>
-		</div>
-		</div>
-	</div>
-	<% }) %>
-	</div>
+        <h1 class="text-3xl font-bold mb-4">Uploaded Images</h1>
+        <!-- <div>
+            <% items.forEach(function(image) { %>
+            <div class="bg-white p-4 rounded-lg shadow-lg mb-4">
+                <div class="flex flex-col items-center">
+                    <img
+                        src="data:image/<%=image.img.contentType%>;base64,
+                            <%=image.img.data.toString('base64')%>"
+                        class="mb-4"
+                    />
+                    <div>
+                        <h5 class="text-xl font-bold"><%= image.name %></h5>
+                        <p class="text-gray-700"><%= image.desc %></p>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div> -->
+    </div>
 </body>
 </html>
