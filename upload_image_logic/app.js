@@ -17,17 +17,20 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 var multer = require('multer');
-//
+
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'upload')
     },
     filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
+        cb(null, file.fieldname + '-' + Date.now() + '.png')
     }
 });
  
-var upload = multer({ storage: storage });
+var upload = multer({ 
+    storage: storage,
+    limits:{fieldSize : 5000000} // 5MB
+});
  
 app.get('/', (req, res) => {
     img_save.find({})
@@ -38,28 +41,13 @@ app.get('/', (req, res) => {
         res.render('web_html.ejs',{items: data})
     })
 });
-// const upload = multer({
-//     // 1MB
-//     limits:{ fileSize:5000000 },
-//     filename: (req, file, cb) => {
-//         cb(null, file.fieldname + '-' + Date.now())
-//     },
-//     fileFilter(req, file, cb){
-//         if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
-//             cb(new Error('Please upload the correct images file'))
-//         }
-//         // call_back function
-//         cb(null, 'upload')
-//     }
-// });
-// var imaaa = multer({ storage: upload });
 
 app.post('/', upload.single('image'), (req, res, next) => {
     var obj = {
         name: req.body.name,
         desc: req.body.desc,
         img:{
-            data: fs.readFileSync(path.join('/upload/' + req.file.filename)),
+            data: fs.readFileSync(path.join('/Users/harry/Desktop/snake_game/upload/' + req.file.filename )),
             contentType: 'image/png'
         }
     };
